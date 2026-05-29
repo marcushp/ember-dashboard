@@ -54,6 +54,10 @@ a.card:hover{border-color:#dcccba;transform:translateY(-1px);}
 .sub a,.sub .link{color:var(--ember-dark);font-weight:600;text-decoration:none;}
 .handle{font-size:12px;color:var(--muted);font-weight:500;}
 .section-h{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:20px 2px 10px;}
+.who{margin-left:auto;display:flex;gap:16px;align-self:center;}
+.who-item{text-align:center;line-height:1.15;}
+.who-item b{display:block;font-size:20px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+.who-item span{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
 footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
 </style>
 </head>
@@ -87,7 +91,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <span class="ico" style="background:var(--ember-soft);color:var(--ember-dark);">✅</span>
         <span class="title">Open action items<small>Not started + in progress</small></span>
       </div>
-      <div class="numrow"><span class="num" style="color:var(--ember);">6</span></div>
+      <div class="numrow"><span class="num" style="color:var(--ember);">6</span><span class="who"><span class="who-item"><b>2</b><span>Marcus</span></span><span class="who-item"><b>3</b><span>Joe</span></span></span></div>
       <div class="sub">snapshot · <span class="link">View live in Notion ↗</span></div>
     </a>
 
@@ -96,7 +100,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <span class="ico" style="background:#efe9fb;color:var(--purple);">⚖️</span>
         <span class="title">Pending decisions<small>Awaiting a call</small></span>
       </div>
-      <div class="numrow"><span class="num" style="color:var(--purple);">3</span></div>
+      <div class="numrow"><span class="num" style="color:var(--purple);">4</span></div>
       <div class="sub">all logged decisions are active · <span class="link">View live ↗</span></div>
     </a>
   </div>

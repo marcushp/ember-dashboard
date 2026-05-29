@@ -29,6 +29,8 @@ ttc, ttt = delta_pill(os.environ.get("TT_DELTA", "0"))
 
 vals = {
     "OPEN_ACTIONS": os.environ.get("OPEN_ACTIONS", "—"),
+    "MARCUS_OPEN": os.environ.get("MARCUS_OPEN", "0"),
+    "JOE_OPEN": os.environ.get("JOE_OPEN", "0"),
     "PENDING": os.environ.get("PENDING_DECISIONS", "—"),
     "IG_FOLLOWERS": fmt(os.environ.get("IG_FOLLOWERS", "0")),
     "TT_FOLLOWERS": fmt(os.environ.get("TT_FOLLOWERS", "0")),
@@ -94,6 +96,10 @@ a.card:hover{border-color:#dcccba;transform:translateY(-1px);}
 .sub a,.sub .link{color:var(--ember-dark);font-weight:600;text-decoration:none;}
 .handle{font-size:12px;color:var(--muted);font-weight:500;}
 .section-h{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:20px 2px 10px;}
+.who{margin-left:auto;display:flex;gap:16px;align-self:center;}
+.who-item{text-align:center;line-height:1.15;}
+.who-item b{display:block;font-size:20px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+.who-item span{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
 footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
 </style>
 </head>
@@ -127,7 +133,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <span class="ico" style="background:var(--ember-soft);color:var(--ember-dark);">✅</span>
         <span class="title">Open action items<small>Not started + in progress</small></span>
       </div>
-      <div class="numrow"><span class="num" style="color:var(--ember);">%%OPEN_ACTIONS%%</span></div>
+      <div class="numrow"><span class="num" style="color:var(--ember);">%%OPEN_ACTIONS%%</span><span class="who"><span class="who-item"><b>%%MARCUS_OPEN%%</b><span>Marcus</span></span><span class="who-item"><b>%%JOE_OPEN%%</b><span>Joe</span></span></span></div>
       <div class="sub">snapshot · <span class="link">View live in Notion ↗</span></div>
     </a>
 
