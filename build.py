@@ -1,4 +1,44 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""Regenerates ember-dashboard-embed.html from Notion-sourced values.
+Values are passed via environment variables; sensible defaults keep it
+rendering even if a value is missing. The countdown is live JS and needs
+no input. Run: OPEN_ACTIONS=.. PENDING_DECISIONS=.. IG_FOLLOWERS=.. \
+IG_DELTA=.. TT_FOLLOWERS=.. TT_DELTA=.. ASOF=.. WEEK=.. python3 build.py
+"""
+import os
+
+def fmt(n):
+    try:
+        return f"{int(round(float(n))):,}"
+    except Exception:
+        return str(n)
+
+def delta_pill(d):
+    try:
+        d = float(d)
+    except Exception:
+        d = 0
+    if d > 0:
+        return ("up", f"▲ {fmt(d)} this wk")
+    if d < 0:
+        return ("down", f"▼ {fmt(abs(d))} this wk")
+    return ("flat", "flat this wk")
+
+igc, igt = delta_pill(os.environ.get("IG_DELTA", "0"))
+ttc, ttt = delta_pill(os.environ.get("TT_DELTA", "0"))
+
+vals = {
+    "OPEN_ACTIONS": os.environ.get("OPEN_ACTIONS", "—"),
+    "PENDING": os.environ.get("PENDING_DECISIONS", "—"),
+    "IG_FOLLOWERS": fmt(os.environ.get("IG_FOLLOWERS", "0")),
+    "TT_FOLLOWERS": fmt(os.environ.get("TT_FOLLOWERS", "0")),
+    "ASOF": os.environ.get("ASOF", "today"),
+    "WEEK": os.environ.get("WEEK", "this week"),
+    "IG_DELTA_CLASS": igc, "IG_DELTA_TEXT": igt,
+    "TT_DELTA_CLASS": ttc, "TT_DELTA_TEXT": ttt,
+}
+
+TEMPLATE = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -67,7 +107,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <p class="tag">1200 Stewart Street · Seattle</p>
       </div>
     </div>
-    <div class="asof"><span class="pill">● COUNTDOWN LIVE</span><br>Figures as of <b>May 29, 2026</b></div>
+    <div class="asof"><span class="pill">● COUNTDOWN LIVE</span><br>Figures as of <b>%%ASOF%%</b></div>
   </div>
 
   <div class="hero">
@@ -87,7 +127,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <span class="ico" style="background:var(--ember-soft);color:var(--ember-dark);">✅</span>
         <span class="title">Open action items<small>Not started + in progress</small></span>
       </div>
-      <div class="numrow"><span class="num" style="color:var(--ember);">20</span></div>
+      <div class="numrow"><span class="num" style="color:var(--ember);">%%OPEN_ACTIONS%%</span></div>
       <div class="sub">snapshot · <span class="link">View live in Notion ↗</span></div>
     </a>
 
@@ -96,7 +136,7 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         <span class="ico" style="background:#efe9fb;color:var(--purple);">⚖️</span>
         <span class="title">Pending decisions<small>Awaiting a call</small></span>
       </div>
-      <div class="numrow"><span class="num" style="color:var(--purple);">0</span></div>
+      <div class="numrow"><span class="num" style="color:var(--purple);">%%PENDING%%</span></div>
       <div class="sub">all logged decisions are active · <span class="link">View live ↗</span></div>
     </a>
   </div>
@@ -110,8 +150,8 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         </span>
         <span class="title">Instagram <span class="handle">@emberseattle</span></span>
       </div>
-      <div class="numrow"><span class="num">101</span><span class="delta flat">flat this wk</span></div>
-      <div class="sub">followers · week of May 25</div>
+      <div class="numrow"><span class="num">%%IG_FOLLOWERS%%</span><span class="delta %%IG_DELTA_CLASS%%">%%IG_DELTA_TEXT%%</span></div>
+      <div class="sub">followers · week of %%WEEK%%</div>
     </a>
 
     <a class="card" href="https://www.tiktok.com/@lightsoutmarcus" target="_blank" rel="noopener">
@@ -121,13 +161,13 @@ footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
         </span>
         <span class="title">TikTok <span class="handle">@lightsoutmarcus</span></span>
       </div>
-      <div class="numrow"><span class="num">41,400</span><span class="delta flat">flat this wk</span></div>
-      <div class="sub">followers · week of May 25</div>
+      <div class="numrow"><span class="num">%%TT_FOLLOWERS%%</span><span class="delta %%TT_DELTA_CLASS%%">%%TT_DELTA_TEXT%%</span></div>
+      <div class="sub">followers · week of %%WEEK%%</div>
     </a>
   </div>
 
   <footer>
-    Countdown updates live in the browser. Action, decision &amp; follower figures are a snapshot as of May 29, 2026, refreshed automatically each day from the Ember HQ Notion teamspace.
+    Countdown updates live in the browser. Action, decision &amp; follower figures are a snapshot as of %%ASOF%%, refreshed automatically each day from the Ember HQ Notion teamspace.
   </footer>
 </div>
 
@@ -151,3 +191,13 @@ tick(); setInterval(tick,1000);
 </script>
 </body>
 </html>
+'''
+
+out = TEMPLATE
+for k, v in vals.items():
+    out = out.replace("%%" + k + "%%", str(v))
+
+target = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ember-dashboard-embed.html")
+with open(target, "w", encoding="utf-8") as f:
+    f.write(out)
+print("wrote", target)
