@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ember HQ — Command Center</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#faf7f3; --card:#ffffff; --ink:#241d18; --muted:#8a7c70; --line:#ece3d8;
+  --ember:#c4541f; --ember-dark:#9a3f15; --ember-soft:#fbece2;
+  --good:#2f8f5b; --good-soft:#e7f4ec; --bad:#c0492f; --bad-soft:#fbe9e4;
+  --ig:#c13584; --tt:#111111; --purple:#6b4fae;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);}
+body{color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:920px;margin:0 auto;padding:22px 20px 40px;}
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.flame{width:32px;height:32px;flex:0 0 auto;}
+.brand h1{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em;}
+.brand .tag{font-size:12px;color:var(--muted);margin:1px 0 0;}
+.asof{font-size:11px;color:var(--muted);text-align:right;line-height:1.5;}
+.asof .pill{font-size:10px;font-weight:700;color:var(--ember-dark);background:var(--ember-soft);border-radius:20px;padding:2px 8px;letter-spacing:.03em;}
+
+.hero{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:14px;position:relative;overflow:hidden;}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(120% 140% at 100% 0%, var(--ember-soft) 0%, transparent 55%);pointer-events:none;}
+.hero .lab{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ember-dark);font-weight:700;margin:0 0 4px;position:relative;}
+.bigwrap{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;position:relative;}
+.big{font-size:62px;font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--ember);font-variant-numeric:tabular-nums;}
+.bigsub{font-size:14px;color:var(--muted);}
+.bigsub b{color:var(--ink);font-weight:600;}
+.clock{margin-top:6px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;position:relative;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--good);display:inline-block;margin-right:6px;vertical-align:middle;}
+.bar{margin-top:16px;height:8px;border-radius:6px;background:#f0e7dc;overflow:hidden;position:relative;}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--ember),#e08a3c);border-radius:6px;width:0;transition:width 1.2s ease;}
+.barlabs{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px;position:relative;}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.grid{grid-template-columns:1fr;}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;text-decoration:none;color:inherit;display:block;transition:border-color .15s, transform .15s;}
+a.card:hover{border-color:#dcccba;transform:translateY(-1px);}
+.card .top{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:15px;}
+.card .title{font-size:13px;font-weight:600;color:var(--ink);}
+.card .title small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;}
+.num{font-size:42px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;}
+.numrow{display:flex;align-items:baseline;gap:10px;}
+.delta{font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:20px;font-variant-numeric:tabular-nums;}
+.flat{background:#f1ece5;color:#8a7c70;}
+.up{background:var(--good-soft);color:var(--good);}
+.down{background:var(--bad-soft);color:var(--bad);}
+.sub{font-size:12px;color:var(--muted);margin-top:8px;}
+.sub a,.sub .link{color:var(--ember-dark);font-weight:600;text-decoration:none;}
+.handle{font-size:12px;color:var(--muted);font-weight:500;}
+.section-h{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:20px 2px 10px;}
+footer{margin-top:20px;font-size:11px;color:var(--muted);line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="brand">
+      <svg class="flame" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C12 2 5 7.5 5 13.5C5 17.6 8.1 21 12 21C15.9 21 19 17.6 19 13.5C19 11 17.8 9 16.5 7.5C16.5 9.5 15.3 10.5 14.3 10.5C14.9 8 13.5 4 12 2Z" fill="#c4541f"/><path d="M12 21C9.8 21 9 19.2 9 17.6C9 15.6 10.5 14.6 11.2 13.5C11.4 14.6 12.2 15 12.8 15.4C13.6 15.9 14.2 16.7 14.2 17.7C14.2 19.3 13.3 21 12 21Z" fill="#f2a35a"/></svg>
+      <div>
+        <h1>Ember HQ — Command Center</h1>
+        <p class="tag">1200 Stewart Street · Seattle</p>
+      </div>
+    </div>
+    <div class="asof"><span class="pill">● COUNTDOWN LIVE</span><br>Figures as of <b>May 28, 2026</b></div>
+  </div>
+
+  <div class="hero">
+    <p class="lab">⏳ Countdown to Public Launch</p>
+    <div class="bigwrap">
+      <span class="big" id="days">—</span>
+      <span class="bigsub">days until <b>Oct 1, 2027</b><br><span id="weeks">—</span></span>
+    </div>
+    <div class="clock" id="clock">&nbsp;</div>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="barlabs"><span>Founder sync · Mar 2026</span><span id="pct">—</span><span>Launch · Oct 2027</span></div>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="https://www.notion.so/109475df45cf44ab8e72c71042a65da2" target="_blank" rel="noopener">
+      <div class="top">
+        <span class="ico" style="background:var(--ember-soft);color:var(--ember-dark);">✅</span>
+        <span class="title">Open action items<small>Not started + in progress</small></span>
+      </div>
+      <div class="numrow"><span class="num" style="color:var(--ember);">20</span></div>
+      <div class="sub">snapshot · <span class="link">View live in Notion ↗</span></div>
+    </a>
+
+    <a class="card" href="https://www.notion.so/e93a70760a514869a0d6ac46b904d841" target="_blank" rel="noopener">
+      <div class="top">
+        <span class="ico" style="background:#efe9fb;color:var(--purple);">⚖️</span>
+        <span class="title">Pending decisions<small>Awaiting a call</small></span>
+      </div>
+      <div class="numrow"><span class="num" style="color:var(--purple);">0</span></div>
+      <div class="sub">all logged decisions are active · <span class="link">View live ↗</span></div>
+    </a>
+  </div>
+
+  <div class="section-h">Social pulse · weekly</div>
+  <div class="grid">
+    <a class="card" href="https://www.instagram.com/emberseattle" target="_blank" rel="noopener">
+      <div class="top">
+        <span class="ico" style="background:#fce7f1;color:var(--ig);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>
+        </span>
+        <span class="title">Instagram <span class="handle">@emberseattle</span></span>
+      </div>
+      <div class="numrow"><span class="num">101</span><span class="delta flat">flat this wk</span></div>
+      <div class="sub">followers · week of May 25</div>
+    </a>
+
+    <a class="card" href="https://www.tiktok.com/@lightsoutmarcus" target="_blank" rel="noopener">
+      <div class="top">
+        <span class="ico" style="background:#eaeaea;color:var(--tt);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.2 1.9 4 4.1 4.3v3c-1.6 0-3.1-.5-4.3-1.4v6.4c0 3.4-2.8 6.2-6.2 6.2S3.9 18.7 3.9 15.3c0-3.2 2.5-5.9 5.7-6.1v3.1c-1.5.2-2.6 1.5-2.6 3 0 1.7 1.4 3.1 3.1 3.1s3.1-1.4 3.1-3.1V3h3.3Z"/></svg>
+        </span>
+        <span class="title">TikTok <span class="handle">@lightsoutmarcus</span></span>
+      </div>
+      <div class="numrow"><span class="num">41,400</span><span class="delta flat">flat this wk</span></div>
+      <div class="sub">followers · week of May 25 · shown as 41.4K</div>
+    </a>
+  </div>
+
+  <footer>
+    Countdown updates live in the browser. Action, decision &amp; follower figures are a snapshot as of May 28, 2026 — the live versions sit on the Dashboard page inside your Notion teamspace.
+  </footer>
+</div>
+
+<script>
+function fmt(n){return Number(n).toLocaleString("en-US");}
+function pad(n){return String(n).padStart(2,"0");}
+var LAUNCH=new Date("2027-10-01T00:00:00");
+var START=new Date("2026-03-18T00:00:00");
+function tick(){
+  var now=new Date(), ms=LAUNCH-now, day=86400000;
+  var days=Math.floor(ms/day);
+  document.getElementById("days").textContent=fmt(days);
+  document.getElementById("weeks").textContent=Math.round(days/7)+" weeks · "+Math.floor(days/30)+" months";
+  var h=Math.floor((ms%day)/3600000), m=Math.floor((ms%3600000)/60000), s=Math.floor((ms%60000)/1000);
+  document.getElementById("clock").innerHTML="<span class='dot'></span>"+pad(h)+"h "+pad(m)+"m "+pad(s)+"s remaining today";
+  var pct=Math.min(100,Math.max(0,((now-START)/(LAUNCH-START))*100));
+  document.getElementById("barfill").style.width=pct.toFixed(1)+"%";
+  document.getElementById("pct").textContent=pct.toFixed(0)+"% elapsed";
+}
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>
